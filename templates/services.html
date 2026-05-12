@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Services — Munawar Watch Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: rgba(201,168,76,0.15);
+      --black: #050505;
+      --dark: #0D0D0D;
+      --dark2: #111111;
+      --white: #F5F0E8;
+      --gray: #777770;
+      --gray-light: #AAAAAA;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Cursor */
+    .cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s; }
+    .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.15s ease; opacity: 0.5; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 26px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(5,5,5,0.98) 0%, rgba(5,5,5,0.0) 100%);
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--gold);
+    }
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem; font-weight: 400;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--white);
+    }
+    .nav-back {
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gray);
+      text-decoration: none; cursor: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.3s;
+    }
+    .nav-back:hover { color: var(--gold); }
+    .nav-back::before { content: '←'; font-size: 0.9rem; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 160px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: 'SERVICES';
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(6rem, 15vw, 14rem);
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: rgba(201,168,76,0.04);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .header-eyebrow {
+      font-size: 0.58rem; letter-spacing: 0.5em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 300; line-height: 1.05;
+      margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+    .header-title em { font-style: italic; color: var(--gold-light); }
+    .header-desc {
+      font-size: 0.68rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--gray-light);
+      line-height: 2.2; max-width: 480px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.6s forwards;
+    }
+    .header-rule {
+      width: 80px; height: 1px;
+      background: var(--gold); margin-top: 36px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.8s forwards;
+    }
+
+    /* SERVICES GRID */
+    .services-section {
+      padding: 20px 60px 100px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .service-card {
+      position: relative;
+      padding: 56px 44px;
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.08);
+      overflow: hidden;
+      cursor: none;
+      transition: border-color 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .service-card.visible {
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.2s; }
+    .service-card:nth-child(3) { animation-delay: 0.3s; }
+    .service-card:nth-child(4) { animation-delay: 0.4s; }
+    .service-card:nth-child(5) { animation-delay: 0.5s; }
+    .service-card:nth-child(6) { animation-delay: 0.6s; }
+
+    .service-card:hover { border-color: rgba(201,168,76,0.35); }
+
+    /* Hover fill */
+    .service-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .service-card:hover::before { opacity: 1; }
+
+    /* Gold corner accent */
+    .service-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 0; height: 0;
+      border-top: 3px solid var(--gold);
+      border-left: 3px solid var(--gold);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+    .service-card:hover::after { width: 40px; height: 40px; }
+
+    .service-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem; font-weight: 300;
+      letter-spacing: 0.3em; color: var(--gold);
+      margin-bottom: 32px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .service-number::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, rgba(201,168,76,0.4), transparent);
+    }
+
+    /* Watch Icon SVG */
+    .service-icon {
+      width: 52px; height: 52px;
+      margin-bottom: 28px;
+      color: var(--gold);
+      opacity: 0.8;
+      transition: opacity 0.3s, transform 0.4s ease;
+    }
+    .service-card:hover .service-icon { opacity: 1; transform: scale(1.05); }
+
+    .service-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem; font-weight: 400;
+      letter-spacing: 0.02em; line-height: 1.2;
+      margin-bottom: 8px;
+      transition: color 0.3s;
+    }
+    .service-card:hover .service-title { color: var(--gold-light); }
+
+    .service-subtitle {
+      font-size: 0.58rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 20px; font-weight: 500;
+    }
+
+    .service-desc {
+      font-size: 0.68rem; line-height: 2;
+      color: var(--gray-light);
+      letter-spacing: 0.04em;
+    }
+
+    .service-features {
+      margin-top: 28px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .feature-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gray);
+      transition: color 0.3s;
+    }
+    .service-card:hover .feature-item { color: var(--gray-light); }
+    .feature-dot {
+      width: 4px; height: 4px;
+      background: var(--gold); border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* FEATURED BANNER */
+    .featured-banner {
+      margin: 2px 60px;
+      padding: 56px 60px;
+      background: linear-gradient(110deg, #0e0b00 0%, #1a1400 50%, #0a0900 100%);
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 40px;
+      position: relative; overflow: hidden;
+    }
+    .featured-banner::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 300px; height: 100%;
+      background: radial-gradient(ellipse at right center, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .banner-content { position: relative; z-index: 1; }
+    .banner-eyebrow {
+      font-size: 0.55rem; letter-spacing: 0.5em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300;
+      line-height: 1.2; margin-bottom: 12px;
+    }
+    .banner-title em { font-style: italic; color: var(--gold-light); }
+    .banner-desc {
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      color: var(--gray-light); line-height: 2; max-width: 420px;
+    }
+    .banner-cta {
+      position: relative; z-index: 1; flex-shrink: 0;
+    }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 18px 40px;
+      font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      text-decoration: none; cursor: none;
+      background: var(--gold); color: var(--black);
+      border: 1px solid var(--gold);
+      position: relative; overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-gold::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gold-light);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .btn-gold:hover::before { transform: scaleX(1); }
+    .btn-gold span, .btn-gold-arrow { position: relative; z-index: 1; }
+    .btn-gold:hover .btn-gold-arrow { transform: translateX(4px); }
+    .btn-gold-arrow { transition: transform 0.3s ease; }
+
+    /* CONTACT STRIP */
+    .contact-strip {
+      margin: 2px 60px 80px;
+      padding: 36px 60px;
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.08);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px;
+    }
+    .contact-item {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .contact-icon {
+      width: 38px; height: 38px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 0.55rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gray); margin-bottom: 4px;
+    }
+    .contact-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 400;
+      letter-spacing: 0.05em; color: var(--white);
+    }
+    .contact-divider {
+      width: 1px; height: 40px;
+      background: rgba(201,168,76,0.15);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .page-header { padding: 120px 24px 60px; }
+      .services-section { padding: 10px 24px 60px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .featured-banner { margin: 2px 24px; padding: 40px 24px; flex-direction: column; }
+      .contact-strip { margin: 2px 24px 60px; padding: 24px; flex-direction: column; align-items: flex-start; }
+      .contact-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="http://127.0.0.1:8000/" class="nav-logo">
+      <div class="nav-logo-icon">◷</div>
+      <span class="nav-logo-text">Munawar Watch Center</span>
+    </a>
+    <a href="http://127.0.0.1:8000/" class="nav-back">Back to Home</a>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="header-eyebrow">Munawar Watch Center · Since 1951</p>
+    <h1 class="header-title">Our <em>Services</em></h1>
+    <p class="header-desc">Expert craftsmanship for every timepiece — from precision automatic movements to classic quartz calibers and grand wall clocks</p>
+    <div class="header-rule"></div>
+  </header>
+
+  <!-- SERVICES GRID -->
+  <section class="services-section">
+    <div class="services-grid" id="servicesGrid">
+
+      <!-- 1. Automatic Watch Repair -->
+      <div class="service-card">
+        <div class="service-number">01</div>
+        <svg class="service-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="26" cy="26" r="18"/>
+          <circle cx="26" cy="26" r="13"/>
+          <line x1="26" y1="13" x2="26" y2="8"/>
+          <line x1="26" y1="39" x2="26" y2="44"/>
+          <line x1="13" y1="26" x2="8" y2="26"/>
+          <line x1="39" y1="26" x2="44" y2="26"/>
+          <line x1="26" y1="26" x2="26" y2="18"/>
+          <line x1="26" y1="26" x2="32" y2="26"/>
+          <circle cx="26" cy="26" r="1.5" fill="currentColor" stroke="none"/>
+          <!-- crown -->
+          <rect x="44" y="23" width="5" height="6" rx="1"/>
+        </svg>
+        <div class="service-title">Automatic<br/>Watches</div>
+        <div class="service-subtitle">Mechanical Movement Specialist</div>
+        <p class="service-desc">Complete overhaul and servicing of self-winding automatic movements. From luxury Swiss calibers to Japanese automatics — every gear inspected, cleaned, and lubricated.</p>
+        <div class="service-features">
+          <div class="feature-item"><span class="feature-dot"></span>Full Movement Overhaul</div>
+          <div class="feature-item"><span class="feature-dot"></span>Mainspring Replacement</div>
+          <div class="feature-item"><span class="feature-dot"></span>Rotor & Winding System</div>
+          <div class="feature-item"><span class="feature-dot"></span>Water Resistance Testing</div>
+          <div class="feature-item"><span class="feature-dot"></span>Timing & Accuracy Calibration</div>
+        </div>
+      </div>
+
+      <!-- 2. Quartz Watch Repair -->
+      <div class="service-card">
+        <div class="service-number">02</div>
+        <svg class="service-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="26" cy="26" r="18"/>
+          <circle cx="26" cy="26" r="13"/>
+          <line x1="26" y1="13" x2="26" y2="8"/>
+          <line x1="26" y1="39" x2="26" y2="44"/>
+          <line x1="13" y1="26" x2="8" y2="26"/>
+          <line x1="39" y1="26" x2="44" y2="26"/>
+          <!-- Quartz lightning bolt -->
+          <polyline points="28,16 23,26 29,26 24,36"/>
+          <circle cx="26" cy="26" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+        <div class="service-title">Quartz<br/>Watches</div>
+        <div class="service-subtitle">Battery & Electronic Calibers</div>
+        <p class="service-desc">Professional servicing for all quartz-powered timepieces. Battery replacement, circuit diagnostics, and complete movement cleaning for all brands and models.</p>
+        <div class="service-features">
+          <div class="feature-item"><span class="feature-dot"></span>Battery Replacement (All Types)</div>
+          <div class="feature-item"><span class="feature-dot"></span>Circuit Board Diagnostics</div>
+          <div class="feature-item"><span class="feature-dot"></span>Coil & Stepper Motor Service</div>
+          <div class="feature-item"><span class="feature-dot"></span>LCD & Display Repair</div>
+          <div class="feature-item"><span class="feature-dot"></span>Crown & Pusher Sealing</div>
+        </div>
+      </div>
+
+      <!-- 3. Wall Clocks -->
+      <div class="service-card">
+        <div class="service-number">03</div>
+        <svg class="service-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.2">
+          <!-- Wall clock shape -->
+          <rect x="10" y="8" width="32" height="36" rx="3"/>
+          <circle cx="26" cy="26" r="10"/>
+          <line x1="26" y1="16" x2="26" y2="21"/>
+          <line x1="26" y1="31" x2="26" y2="36"/>
+          <line x1="16" y1="26" x2="21" y2="26"/>
+          <line x1="31" y1="26" x2="36" y2="26"/>
+          <line x1="26" y1="26" x2="26" y2="20"/>
+          <line x1="26" y1="26" x2="31" y2="26"/>
+          <circle cx="26" cy="26" r="1.2" fill="currentColor" stroke="none"/>
+          <!-- pendulum -->
+          <line x1="26" y1="44" x2="26" y2="48"/>
+          <circle cx="26" cy="49" r="2"/>
+        </svg>
+        <div class="service-title">Wall<br/>Clocks</div>
+        <div class="service-subtitle">Pendulum & Decorative Timepieces</div>
+        <p class="service-desc">Expert repair for all wall clocks — from ornate pendulum grandfather clocks to modern decorative pieces. Restoring chimes, mechanisms, and aesthetic beauty since 1951.</p>
+        <div class="service-features">
+          <div class="feature-item"><span class="feature-dot"></span>Pendulum Adjustment & Repair</div>
+          <div class="feature-item"><span class="feature-dot"></span>Chime Mechanism Overhaul</div>
+          <div class="feature-item"><span class="feature-dot"></span>Movement Cleaning & Oiling</div>
+          <div class="feature-item"><span class="feature-dot"></span>Spring & Weight Systems</div>
+          <div class="feature-item"><span class="feature-dot"></span>Case & Glass Restoration</div>
+        </div>
+      </div>
+
+      <!-- 4. Watch Polishing -->
+      <div class="service-card">
+        <div class="service-number">04</div>
+        <svg class="service-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="26" cy="26" r="18"/>
+          <!-- sparkle lines -->
+          <line x1="26" y1="4" x2="26" y2="10"/>
+          <line x1="26" y1="42" x2="26" y2="48"/>
+          <line x1="4" y1="26" x2="10" y2="26"/>
+          <line x1="42" y1="26" x2="48" y2="26"/>
+          <line x1="10" y1="10" x2="14.5" y2="14.5"/>
+          <line x1="37.5" y1="37.5" x2="42" y2="42"/>
+          <line x1="42" y1="10" x2="37.5" y2="14.5"/>
+          <line x1="14.5" y1="37.5" x2="10" y2="42"/>
+          <circle cx="26" cy="26" r="8"/>
+        </svg>
+        <div class="service-title">Polishing<br/>&amp; Detailing</div>
+        <div class="service-subtitle">Case & Bracelet Refinishing</div>
+        <p class="service-desc">Restore your timepiece to showroom condition. Professional polishing, brushing, and refinishing for watch cases, bracelets, and crystals using industry-grade equipment.</p>
+        <div class="service-features">
+          <div class="feature-item"><span class="feature-dot"></span>Case Polishing & Brushing</div>
+          <div class="feature-item"><span class="feature-dot"></span>Bracelet Deep Cleaning</div>
+          <div class="feature-item"><span class="feature-dot"></span>Sapphire Crystal Replacement</div>
+          <div class="feature-item"><span class="feature-dot"></span>Scratch & Scuff Removal</div>
+          <div class="feature-item"><span class="feature-dot"></span>Dial Cleaning & Hands Service</div>
+        </div>
+      </div>
+
+      <!-- 5. Strap & Bracelet -->
+      <div class="service-card">
+        <div class="service-number">05</div>
+        <svg class="service-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="26" cy="26" r="12"/>
+          <line x1="26" y1="14" x2="26" y2="4"/>
+          <line x1="26" y1="38" x2="26" y2="48"/>
+          <rect x="20" y="1" width="12" height="6" rx="1.5"/>
+          <rect x="20" y="45" width="12" height="6" rx="1.5"/>
+          <line x1="23" y1="47.5" x2="29" y2="47.5"/>
+          <circle cx="26" cy="26" r="1.5" fill="currentColor" stroke="none"/>
+          <line x1="26" y1="26" x2="26" y2="20"/>
+          <line x1="26" y1="26" x2="30" y2="26"/>
+        </svg>
+        <div class="service-title">Straps<br/>&amp; Bracelets</div>
+        <div class="service-subtitle">Genuine Leather & Metal Links</div>
+        <p class="service-desc">Wide selection of original and aftermarket straps and bracelets. Expert fitting, sizing, and replacement for all watch brands. Leather, NATO, rubber, and metal options available.</p>
+        <div class="service-features">
+          <div class="feature-item"><span class="feature-dot"></span>Genuine Leather Straps</div>
+          <div class="feature-item"><span class="feature-dot"></span>Metal Bracelet Sizing</div>
+          <div class="feature-item"><span class="feature-dot"></span>NATO & Rubber Straps</div>
+          <div class="feature-item"><span class="feature-dot"></span>Clasp & Buckle Repair</div>
+          <div class="feature-item"><span class="feature-dot"></span>Spring Bar Replacement</div>
+        </div>
+      </div>
+
+      <!-- 6. Watch Sales -->
+      <div class="service-card">
+        <div class="service-number">06</div>
+        <svg class="service-icon" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="26" cy="26" r="18"/>
+          <circle cx="26" cy="26" r="13"/>
+          <line x1="26" y1="13" x2="26" y2="8"/>
+          <line x1="26" y1="39" x2="26" y2="44"/>
+          <line x1="13" y1="26" x2="8" y2="26"/>
+          <line x1="39" y1="26" x2="44" y2="26"/>
+          <line x1="26" y1="26" x2="26" y2="19"/>
+          <line x1="26" y1="26" x2="33" y2="22"/>
+          <circle cx="26" cy="26" r="1.5" fill="currentColor" stroke="none"/>
+          <!-- star above -->
+          <polygon points="26,5 27,8 30,8 27.5,10 28.5,13 26,11 23.5,13 24.5,10 22,8 25,8" fill="currentColor" stroke="none" opacity="0.8"/>
+        </svg>
+        <div class="service-title">Watch<br/>Sales</div>
+        <div class="service-subtitle">Original · Imported · Wholesale</div>
+        <p class="service-desc">Authentic original and imported watches at wholesale prices. Curated collection of premium timepieces from Swiss and international brands for every style and budget.</p>
+        <div class="service-features">
+          <div class="feature-item"><span class="feature-dot"></span>100% Original Timepieces</div>
+          <div class="feature-item"><span class="feature-dot"></span>Imported Swiss & Japanese Brands</div>
+          <div class="feature-item"><span class="feature-dot"></span>Wholesale Price Guarantee</div>
+          <div class="feature-item"><span class="feature-dot"></span>Wall Clocks — All Varieties</div>
+          <div class="feature-item"><span class="feature-dot"></span>Gift & Corporate Orders</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FEATURED BANNER -->
+  <div class="featured-banner">
+    <div class="banner-content">
+      <p class="banner-eyebrow">Trusted Since 1951 · 70+ Years of Excellence</p>
+      <h2 class="banner-title">Bring Your Watch<br/><em>Back to Life</em></h2>
+      <p class="banner-desc">Every timepiece that leaves our workshop is precision-tested and restored to its finest condition. Drop by our Gujrat showroom or call us directly.</p>
+    </div>
+    <div class="banner-cta">
+      <a href="https://www.google.com/maps/dir//Munawar+Watch+Center,+main+Muslim+Bazaar,+Main+Bazaar,+Gujrat,+Pakistan/@32.5795291,74.0652613,3140m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x391f1b09673a60eb:0xf608ab606bfd227!2m2!1d74.0811149!2d32.5753987?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D" class="btn-gold">
+        <span>Visit Showroom Now</span>
+        <span class="btn-gold-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- CONTACT STRIP -->
+  <div class="contact-strip">
+    <div class="contact-item">
+      <div class="contact-icon">✆</div>
+      <div>
+        <div class="contact-label">Call / WhatsApp</div>
+        <div class="contact-value">0315-6202157</div>
+      </div>
+    </div>
+    <div class="contact-divider"></div>
+    <div class="contact-item">
+      <div class="contact-icon">◎</div>
+      <div>
+        <div class="contact-label">WhatsApp</div>
+        <div class="contact-value">0300-6202157</div>
+      </div>
+    </div>
+    <div class="contact-divider"></div>
+    <div class="contact-item">
+      <div class="contact-icon">✦</div>
+      <div>
+        <div class="contact-label">Contact Person</div>
+        <div class="contact-value">M. Abdullah</div>
+      </div>
+    </div>
+    <div class="contact-divider"></div>
+    <div class="contact-item">
+      <div class="contact-icon">⌖</div>
+      <div>
+        <div class="contact-label">Location</div>
+        <div class="contact-value">Muslim Bazar, Gujrat</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    });
+    (function animRing() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.opacity = '0.3'; });
+      el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '0.5'; });
+    });
+
+    // Scroll reveal for cards
+    const cards = document.querySelectorAll('.service-card');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    cards.forEach(c => obs.observe(c));
+  </script>
+</body>
+</html>

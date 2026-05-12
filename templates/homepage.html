@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munawar Watch Center — Since 1951</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --gold: #c9a84c;
+        --gold-light: #e8c97a;
+        --gold-dark: #8b6914;
+        --black: #050505;
+        --dark: #0d0d0d;
+        --dark2: #141414;
+        --white: #f5f0e8;
+        --gray: #888880;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--black);
+        color: var(--white);
+        font-family: "Montserrat", sans-serif;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* Custom Cursor */
+      .cursor {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s;
+      }
+      .cursor-ring {
+        position: fixed;
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: all 0.15s ease;
+        opacity: 0.6;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 28px 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(
+          to bottom,
+          rgba(5, 5, 5, 0.95) 0%,
+          transparent 100%
+        );
+      }
+      .nav-logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        font-weight: 400;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .nav-since {
+        font-size: 0.6rem;
+        letter-spacing: 0.4em;
+        color: var(--gray);
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .nav-contact {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        color: var(--gray);
+        text-transform: uppercase;
+      }
+      .nav-contact span {
+        color: var(--gold);
+      }
+
+      /* HERO */
+      .hero {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      /* AP Watch background using CSS art */
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 70% 50%,
+          #1a1200 0%,
+          #0a0800 40%,
+          #050505 100%
+        );
+      }
+
+      /* Decorative Watch Face (CSS Art) */
+      .watch-art {
+        position: absolute;
+        right: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 600px;
+        height: 600px;
+        opacity: 0.12;
+      }
+      .watch-art-inner {
+        position: absolute;
+        right: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 480px;
+        height: 480px;
+        border: 1px solid var(--gold);
+        border-radius: 50%;
+        opacity: 0.15;
+      }
+
+      /* Real watch image overlay */
+      .hero-watch-img {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 58%;
+        background: url("/mnt/user-data/uploads/9927f4c0-b806-48fa-bb00-1235de3a6c78.png")
+          right center / cover no-repeat;
+        mask-image: linear-gradient(
+          to left,
+          rgba(0, 0, 0, 0.9) 40%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to left,
+          rgba(0, 0, 0, 0.9) 40%,
+          rgba(0, 0, 0, 0) 100%
+        );
+      }
+
+      /* Gold grain overlay */
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0.025;
+        pointer-events: none;
+      }
+
+      /* Diagonal gold line */
+      .hero-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 44%;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          var(--gold) 30%,
+          var(--gold) 70%,
+          transparent 100%
+        );
+        opacity: 0.3;
+        transform: skewX(-8deg);
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 10;
+        padding: 0 60px;
+        max-width: 580px;
+      }
+
+      .hero-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 24px;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 0.3s forwards;
+      }
+
+      .hero-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(3.5rem, 6vw, 5.5rem);
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 0.5s forwards;
+      }
+      .hero-title em {
+        font-style: italic;
+        color: var(--gold-light);
+      }
+
+      .hero-subtitle {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.8rem, 3vw, 2.8rem);
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        color: var(--gray);
+        margin-bottom: 40px;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 0.7s forwards;
+      }
+
+      .hero-desc {
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--gray);
+        line-height: 2;
+        margin-bottom: 56px;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 0.9s forwards;
+      }
+      .hero-desc strong {
+        color: var(--gold);
+        font-weight: 500;
+      }
+
+      /* CTA Buttons */
+      .hero-buttons {
+        display: flex;
+        gap: 20px;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 1.1s forwards;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 40px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 500;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: none;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+
+      .btn:hover::before {
+        transform: scaleX(1);
+      }
+
+      .btn-primary {
+        background: var(--gold);
+        color: var(--black);
+        border: 1px solid var(--gold);
+      }
+      .btn-primary::before {
+        background: var(--gold-light);
+      }
+      .btn-primary:hover {
+        color: var(--black);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--white);
+        border: 1px solid rgba(201, 168, 76, 0.4);
+      }
+      .btn-secondary::before {
+        background: rgba(201, 168, 76, 0.08);
+      }
+      .btn-secondary:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      .btn span {
+        position: relative;
+        z-index: 1;
+      }
+      .btn-arrow {
+        position: relative;
+        z-index: 1;
+        font-size: 1rem;
+        transition: transform 0.3s ease;
+      }
+      .btn:hover .btn-arrow {
+        transform: translateX(4px);
+      }
+
+      /* BOTTOM BAR */
+      .hero-bottom {
+        position: absolute;
+        bottom: 40px;
+        left: 60px;
+        right: 60px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        z-index: 10;
+        opacity: 0;
+        animation: fadeUp 0.8s ease 1.3s forwards;
+      }
+
+      .hero-address {
+        font-size: 0.58rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gray);
+        line-height: 2;
+      }
+      .hero-address a {
+        color: var(--gold);
+        text-decoration: none;
+      }
+
+      .hero-socials {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .hero-socials a {
+        font-size: 0.58rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gray);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .hero-socials a:hover {
+        color: var(--gold);
+      }
+
+      /* Gold decorative line bottom */
+      .gold-rule {
+        position: absolute;
+        bottom: 0;
+        left: 60px;
+        width: 120px;
+        height: 1px;
+        background: linear-gradient(to right, var(--gold), transparent);
+      }
+
+      /* Scroll indicator */
+      .scroll-indicator {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        z-index: 10;
+        opacity: 0;
+        animation: fadeIn 1s ease 1.8s forwards;
+      }
+      .scroll-indicator span {
+        font-size: 0.5rem;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .scroll-line {
+        width: 1px;
+        height: 50px;
+        background: linear-gradient(to bottom, var(--gold), transparent);
+        animation: scrollPulse 2s ease infinite;
+      }
+
+      /* Animations */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes scrollPulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        nav {
+          padding: 20px 24px;
+        }
+        .hero-content {
+          padding: 0 24px;
+          max-width: 100%;
+        }
+        .hero-watch-img {
+          width: 100%;
+          opacity: 0.2;
+        }
+        .hero-buttons {
+          flex-direction: column;
+        }
+        .btn {
+          justify-content: center;
+        }
+        .hero-bottom {
+          left: 24px;
+          right: 24px;
+          flex-direction: column;
+          gap: 16px;
+          align-items: flex-start;
+        }
+        .hero-line {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- NAV -->
+    <nav>
+      <div>
+        <div class="nav-logo">Munawar Watch Center</div>
+        <div class="nav-since">Since 1951 — Gujrat</div>
+      </div>
+      <div class="nav-contact">
+        <span>M. Abdullah</span> &nbsp;·&nbsp; 0315-6202157
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-watch-img"></div>
+      <div class="hero-line"></div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow">Horological Excellence · Est. 1951</p>
+        <h1 class="hero-title">Time is <em>Art.</em></h1>
+        <p class="hero-subtitle">Watch Center</p>
+        <p class="hero-desc">
+          Original &amp; Imported Timepieces<br />
+          <strong>Audemars Piguet · Patek Philippe</strong><br />
+          Wall Clocks · Wholesale Prices
+        </p>
+
+        <div class="hero-buttons">
+          <a href="http://127.0.0.1:8000/watches" class="btn btn-primary">
+            <span>Our Watches</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="http://127.0.0.1:8000/service" class="btn btn-secondary">
+            <span>Services</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom Info -->
+      <div class="hero-bottom">
+        <div class="hero-address">
+          Muslim Bazar, Old Fruit Mandi Street<br />
+          Near Ravi Cloth House, <a href="#">Gujrat</a>
+        </div>
+        <div class="hero-socials">
+          <a href="https://www.tiktok.com/@mirza_abdullah">TikTok</a>
+          <a href="https://www.instagram.com/munawarwatchgujrat/">Instagram</a>
+        </div>
+      </div>
+
+      <div class="gold-rule"></div>
+    </section>
+
+    <!-- JS: Cursor -->
+    <script>
+      const cursor = document.getElementById("cursor");
+      const ring = document.getElementById("cursorRing");
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        cursor.style.left = mx + "px";
+        cursor.style.top = my + "px";
+      });
+
+      function animRing() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(animRing);
+      }
+      animRing();
+
+      // Scale ring on hover
+      document.querySelectorAll("a, button").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          ring.style.transform = "translate(-50%,-50%) scale(2)";
+          ring.style.opacity = "0.3";
+        });
+        el.addEventListener("mouseleave", () => {
+          ring.style.transform = "translate(-50%,-50%) scale(1)";
+          ring.style.opacity = "0.6";
+        });
+      });
+    </script>
+  </body>
+</html>
